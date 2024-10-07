@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeit-Anzeige</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aktuelle Zeit</h1>
+        <p id="datetime"></p>
+        <p id="unix"></p>
+        <p id="binary"></p>
+        <p id="octets"></p>
+        <p id="hexOctets"></p>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const unixTimestamp = Math.floor(now.getTime() / 1000);
+
+            // 1. Datum, Uhrzeit im Format YYYY-MM-DD hh:mm:ss
+            const dateTimeStr = now.toISOString().slice(0, 19).replace('T', ' ');
+            document.getElementById('datetime').textContent = `1. Datum und Uhrzeit: ${dateTimeStr}`;
+
+            // 2. UNIX-Timestamp als Dezimalzahl
+            document.getElementById('unix').textContent = `2. UNIX-Timestamp: ${unixTimestamp}`;
+
+            // 3. UNIX-Timestamp als 32 bit Binärformat
+            const binaryStr = unixTimestamp.toString(2).padStart(32, '0');
+            document.getElementById('binary').textContent = `3. Binär: ${binaryStr}`;
+
+            // 4. UNIX-Timestamp als 4 Oktette (Dezimal)
+            const octets = [
+                (unixTimestamp >> 24) & 255,
+                (unixTimestamp >> 16) & 255,
+                (unixTimestamp >> 8) & 255,
+                unixTimestamp & 255
+            ];
+            document.getElementById('octets').textContent = `4. Oktette (Dezimal): ${octets.join('.')}`;
+
+            // 5. UNIX-Timestamp als 4 Oktette (Hexadezimal in Großbuchstaben)
+            const hexOctets = octets.map(octet => octet.toString(16).toUpperCase().padStart(2, '0'));
+            document.getElementById('hexOctets').textContent = `5. Oktette (Hexadezimal): ${hexOctets.join('.')}`;
+        }
+
+        // Initial update and set interval
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
